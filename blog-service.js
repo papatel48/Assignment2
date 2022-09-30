@@ -1,77 +1,47 @@
+/*********************************************************************************
+ *  WEB322 – Assignment 02
+ *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source
+ *  (including 3rd party web sites) or distributed to other students.
+ *
+ *  Name: Pranav Patel
+ *  Student ID: 119945212  
+ *  Date: 30/09/2022
+ *
+ *  Online (Cyclic) Link: https://good-cyan-haddock-hose.cyclic.app/about
+ *
+ ********************************************************************************/
 
-var fs = require("fs");
-
-var catagories = [];
-var posts = [];
-var postcount = 0;
-
-module.exports.initialize = function() {
-    return new Promise(function(resolve, reject) {
-        try {
-            fs.readFile("./data/categories.json", function(err, data) {
-                if (err) {
-                    throw err;
-                }
-                catagories = JSON.parse(data);
-            });         
-            fs.readFile("./data/posts.json", function(err, data) {
-                if (err) {
-                    throw err;
-                }
-                posts = JSON.parse(data);
-            });
-            resolve("Data has been read successfully");
-
-        } catch (err) {
-            reject("unable to read file");
-        }
-        
-
-    });
-}
-
-module.exports.getAllPosts = () => {
-    var arryAllPosts = [];
-    return new Promise((resolve, reject) => {
-        for (var i = 0; i < posts.length; i++) {
-            arryAllPosts.push(posts[i]);
-        }
-        if (arryAllPosts.length == 0) {
-            reject("No Result Returned!!!");
-        }
-        resolve(arryAllPosts);
-    })
-}
-
-
-
-
-module.exports.getPublishedPosts = (postData) => {
-    postData.published = (postData.published) ? true : false;
-    postData.id = ++postcount;
-    return new Promise((resolve, reject) => {
-        posts.push(postData);
-        if (posts.length == 0) {
-            reject("No Result Returned!");
-        }
-        console.log(posts);
-        resolve(posts);
-    });
-}
-
-module.exports.getCategories = () => {
-    var arryGetCategories = [];
-    return new Promise((resolve, reject) => {
-        if (posts.length == 0) {
-            reject("No Result Returned!!!");
-        } else {
-            for (var v = 0; v < catagories.length; v++) {
-                arryGetCategories.push(catagories[v]);
-            }
-            if (arryGetCategories.length == 0) {
-                reject("No Result Return!!!");
-            }
-        }
-        resolve(arryGetCategories);
-    });
-}
+ const express = require('express');
+ const path = require('path');
+ const service = require('./blog-service');
+ 
+ const app = express();
+ 
+ const port = process.env.port || 8080;
+ 
+ app.use(express.static('public'));
+ 
+ app.get('/', (req, res) => {
+     res.redirect('/about');
+ })
+ 
+ app.get('/about', (req, res) => {
+     res.sendFile(path.join(__dirname, 'views/about.html'));
+ })
+ 
+ app.get('/blog', (req, res) => {
+     service.getPublishedPosts().then(data => res.json(data)).catch(err => res.json(err));
+ })
+ 
+ app.get('/posts', (req, res) => {
+     service.getAllPosts().then(data => res.json(data)).catch(err => res.json(err));
+ })
+ 
+ app.get('/categories', (req, res) => {
+     service.getCategories().then(data => res.json(data)).catch(err => res.json(err));
+ })
+ 
+ app.listen(port, () => {
+     console.log(`Listening on http://localhost:${port}`);
+     service.initialize().then((data) => console.log(data)).catch((err) => console.log(err));
+ })
