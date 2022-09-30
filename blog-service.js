@@ -7,7 +7,7 @@
  *  Student ID: 119945212  
  *  Date: 30/09/2022
  *
- *  Online (Cyclic) Link: https://good-cyan-haddock-hose.cyclic.app/about
+ *  Online (Cyclic) Link: 
  *
  ********************************************************************************/
 

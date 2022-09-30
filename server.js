@@ -7,7 +7,7 @@
  *  Student ID: 119945212  
  *  Date: 30/09/2022
  *
- *  Online (Cyclic) Link: https://good-cyan-haddock-hose.cyclic.app/about
+ *  Online (Cyclic) Link: 
  *
  ********************************************************************************/
 
@@ -32,14 +32,14 @@
      });
  }
  
- // setup a 'route' to listen on the default url path (http://localhost)
+ 
  app.get("/", function(req,res){
    res.redirect("/about");
  });
  
  
  
- app.use(express.static('public')); // this line is needed to serve static files
+ app.use(express.static('public')); 
  app.use(bodyParser.urlencoded({ extended: true }));
  app.engine(".hbs", exphbs.engine({
      extname: ".hbs",
@@ -58,7 +58,7 @@
  }));
  app.set("view engine", ".hbs");
  
- // setup another route to listen on /about
+ 
  app.get("/about", function(req,res){
    res.sendFile(path.join(__dirname, "/views/about.html"));
  });
@@ -69,7 +69,7 @@
  app.get("/categories", (req, res) => {
    blog_service.getCategories().then((data) => {
        res.json(data);
-       // res.render("catagorieslist", { data: data, title: "Catagories" });
+       
    }).catch((err) => {
        res.json({ message: err });
    });
@@ -79,7 +79,7 @@
  app.get("/posts", (req, res) => {
    blog_service.getAllPosts().then((data) => {
        res.json(data);
-       // res.render("catagorieslist", { data: data, title: "Catagories" });
+       
    }).catch((err) => {
        res.json({ message: err });
    });
